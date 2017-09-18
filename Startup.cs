@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using LatinDictionaryNoAuth.Data;
 
 namespace LatinDictionaryNoAuth
 {
@@ -29,6 +31,11 @@ namespace LatinDictionaryNoAuth
         {
             // Add framework services.
             services.AddMvc();
+            // string path = System.Environment.GetEnvironmentVariable("LatinDictionaryNoAuth_Db_Path");
+            string path = "/Users/dwendling/workspace/LatinDictionaryNoAuth/Data/latinDictionaryNoAuth.db";
+            var connection = $"Filename={path}";
+            Console.WriteLine($"connection = {connection}");
+            services.AddDbContext<LatinDictionaryWebContext>(options => options.UseSqlite(connection));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,5 +63,32 @@ namespace LatinDictionaryNoAuth
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
+
+        // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        // {
+        //     if (!optionsBuilder.IsConfigured)
+        //     {
+        //         string sqliteConnectionString = null;
+
+        //         try
+        //         {
+        //             var connectionString = new SqliteConnectionStringBuilder()
+        //             {
+        //                 DataSource = Path.Combine(ApplicationData.Current.LocalFolder.Path, "LatinDictionaryNoAuth.db")
+        //             };
+        //             sqliteConnectionString = connectionString.ToString();
+        //         }
+        //         catch (InvalidOperationException)
+        //         {
+        //             var connectionString = new SqliteConnectionStringBuilder()
+        //             {
+        //                 DataSource = "LatinDictionaryNoAuth.db"
+        //             };
+        //             sqliteConnectionString = connectionString.ToString();
+        //         }
+
+        //         optionsBuilder.UseSqlite(sqliteConnectionString);
+        //     }
+        // }
     }
 }
